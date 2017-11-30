@@ -18,11 +18,8 @@ export default class Generator extends Common {
     this._total_taxes = 0
     this._total_inc_taxes = 0
     this._article = []
-    this._defaultLocale = (config.language && config.language.defaultLocale) ? config.language.defaultLocale : 'en';
-    this._availabeLocale = (config.language && config.language.locales) ? config.language.locales : ['en', 'fr'];
     this.hydrate(config.global, this._itemsToHydrate())
-
-    config.language && i18n.configure(config.language);
+    this._i18nConfigure(config.language);
   }
 
   get template() {
@@ -39,7 +36,7 @@ export default class Generator extends Common {
 
   set lang(value) {
     value = value.toLowerCase()
-    if (!this._availabeLocale.includes(value)) throw new Error(`Wrong lang, please set one of ${this._availabeLocale.join(', ')}`)
+    if (!this._availableLocale.includes(value)) throw new Error(`Wrong lang, please set one of ${this._availableLocale.join(', ')}`)
     this._lang = value
   }
 
@@ -387,7 +384,7 @@ export default class Generator extends Common {
 
   /**
    * @description Set reference
-   * @param item
+   * @param pattern
    * @return {*}
    * @private
    */
@@ -537,4 +534,15 @@ export default class Generator extends Common {
     }
   }
 
+  /**
+   * @description
+   * @param config
+   * @private
+   */
+  _i18nConfigure(config) {
+    this._defaultLocale = (config && config.defaultLocale) ? config.defaultLocale : 'en';
+    this._availableLocale = (config && config.locales) ? config.locales : ['en', 'fr'];
+
+    config && i18n.configure(config);
+  }
 }
